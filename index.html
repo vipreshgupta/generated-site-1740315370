@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Company</title>
+    <style>
+        /* General Styles & Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            transition: background-color 0.5s, color 0.5s;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        body.dark-theme {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+
+        .container {
+            width: 85%;
+            margin: 0 auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        p { margin-bottom: 1rem; }
+
+        /* Navigation */
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        body.dark-theme nav {
+            background: #444;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ddd;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+        body.dark-theme header{
+            border-color: #555;
+        }
+
+        /* Product Grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #fff;
+            position: relative;
+            overflow: hidden; /* For hover effect */
+        }
+
+        body.dark-theme .product{
+            border-color: #555;
+            background-color: #333;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .product img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            transition: transform 0.5s ease; /* Smooth zoom */
+
+        }
+        .product:hover img{
+            transform: scale(1.1);
+        }
+
+        .product h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .product p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        body.dark-theme .product p{
+            color: #bbb;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #e44d26;
+            margin-bottom: 1rem;
+        }
+        body.dark-theme .product-price{
+            color: #ff6f61;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+        body.dark-theme .btn{
+            background-color: #f0f0f0;
+            color: #121212;
+        }
+        body.dark-theme .btn:hover{
+            background-color: #ddd;
+        }
+
+        .add-to-cart {
+            width: 100%; /* Full width in product card */
+        }
+
+        /* Cart */
+        #cart {
+            position: fixed;
+            top: 0;
+            right: -300px; /* Initially hidden */
+            width: 300px;
+            height: 100%;
+            background-color: #fff;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        body.dark-theme #cart{
+            background-color: #222;
+            border-color: #555;
+        }
+
+        #cart.show {
+            right: 0;
+        }
+
+        #cart h2 {
+            margin-bottom: 1rem;
+        }
+
+        .cart-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        body.dark-theme .cart-item{
+            border-color: #444;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        body.dark-theme .cart-item-remove{
+            color: #ff6f61;
+        }
+
+        .cart-total {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        /* Theme Toggle */
+        #theme-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            z-index: 100;
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: .5rem;
+            border-radius: .25rem;
+        }
+        body.dark-theme #theme-toggle{
+            background-color: #f0f0f0;
+            color: #121212;
+        }
+
+        /* Cart Toggle */
+        #cart-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 100;
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: .5rem;
+            border-radius: .25rem;
+        }
+        body.dark-theme #cart-toggle{
+            background-color: #f0f0f0;
+            color: #121212;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        body.dark-theme footer{
+            border-color: #555;
+        }
+
+        /* Accessibility */
+        [tabindex]:focus {
+            outline: 2px solid #007bff; /* Focus outline */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            #cart{
+                width: 100%;
+                right: -100%;
+            }
+        }
+        @media (max-width: 480px){
+            nav ul li{
+                display: block;
+                margin: .5rem 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <button id="theme-toggle">Toggle Theme</button>
+    <button id="cart-toggle">Cart</button>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>Welcome to Our Clothing Store</h1>
+            <p>Discover the latest fashion trends.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="products">
+            <!-- Product 1 -->
+            <div class="product" data-id="1" data-name="T-Shirt" data-price="20">
+                <img src="https://www.freepik.com/free-photo/young-woman-with-shopping-bags-studio-yellow-background-isolated_5783785.htm#query=t-shirt&position=0&from_view=keyword&track=sph&uuid=9f99f594-859a-4e7b-8d7a-949c9b9b7a9d" alt="T-Shirt" >
+                <h3>T-Shirt</h3>
+                <p>Comfortable cotton t-shirt.</p>
+                <p class="product-price">$20</p>
+                <button class="btn add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product" data-id="2" data-name="Jeans" data-price="50">
+                <img src="https://www.freepik.com/free-photo/portrait-handsome-smiling-stylish-young-man-model-dressed-red-checkered-shirt-fashion-man-posing_15853678.htm#from_view=detail_alsolike" alt="Jeans">
+                <h3>Jeans</h3>
+                <p>Stylish denim jeans.</p>
+                <p class="product-price">$50</p>
+                <button class="btn add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product" data-id="3" data-name="Hoodie" data-price="40">
+                <img src="https://www.freepik.com/free-photo/young-woman-with-shopping-bags-studio-yellow-background-isolated_5783785.htm#query=t-shirt&position=0&from_view=keyword&track=sph&uuid=9f99f594-859a-4e7b-8d7a-949c9b9b7a9d" alt="Hoodie">
+                <h3>Hoodie</h3>
+                <p>Warm and cozy hoodie.</p>
+                <p class="product-price">$40</p>
+                <button class="btn add-to-cart">Add to Cart</button>
+            </div>
+        </section>
+
+        <aside id="cart">
+            <h2>Your Cart</h2>
+            <ul class="cart-items">
+              <!-- Cart items will be added here -->
+            </ul>
+            <p class="cart-total">Total: $0</p>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Clothing Company. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            body.classList.add(currentTheme);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                localStorage.setItem('theme', ''); // Remove dark theme
+            } else {
+                body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark-theme'); // Save dark theme
+            }
+        });
+
+        // Cart Toggle
+        const cartToggle = document.getElementById('cart-toggle');
+        const cart = document.getElementById('cart');
+
+        cartToggle.addEventListener('click', () => {
+            cart.classList.toggle('show');
+        });
+
+        // Cart Functionality
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        const cartItemsList = document.querySelector('.cart-items');
+        const cartTotal = document.querySelector('.cart-total');
+        let cartData = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to update the cart display
+        function updateCartDisplay() {
+            cartItemsList.innerHTML = ''; // Clear existing items
+            let total = 0;
+
+            cartData.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('cart-item');
+                listItem.innerHTML = `
+                    <span>${item.name} - $${item.price}</span>
+                    <button class="cart-item-remove" data-id="${item.id}">Remove</button>
+                `;
+                cartItemsList.appendChild(listItem);
+                total += item.price;
+            });
+
+            cartTotal.textContent = `Total: $${total}`;
+
+            // Add event listeners to remove buttons (event delegation)
+            cartItemsList.querySelectorAll('.cart-item-remove').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const itemId = event.target.dataset.id;
+                    cartData = cartData.filter(item => item.id !== itemId);
+                    localStorage.setItem('cart', JSON.stringify(cartData));
+                    updateCartDisplay();
+                });
+            });
+        }
+
+        // Initial cart display update
+        updateCartDisplay();
+
+        // Add to cart button event listener
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const productDiv = event.target.closest('.product');
+                const product = {
+                    id: productDiv.dataset.id,
+                    name: productDiv.dataset.name,
+                    price: parseFloat(productDiv.dataset.price)
+                };
+
+                cartData.push(product);
+                localStorage.setItem('cart', JSON.stringify(cartData));
+                updateCartDisplay();
+            });
+        });
+    </script>
+</body>
+</html>
